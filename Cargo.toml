@@ -1,0 +1,8 @@
+[package]
+name = "csv-concat"
+version = "0.1.0"
+authors = ["Aaron Goodfellow <amgoodfellow@oakland.edu>"]
+edition = "2018"
+
+[dependencies]
+glob = "0.3.0"
