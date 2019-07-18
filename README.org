@@ -1,0 +1,21 @@
+#+TITLE: csv-concat
+
+* Summary
+  This project has a simple purpose - concatenate similar csv files together, line by line. 
+
+  It might seem like this could be achieved pretty simply by the following command ~cat one.csv two.csv >> three.csv~
+  this tool is (only slightly) more sophisticated than that, however. 
+
+  Features:
+  - Concatenate all files matching ~./*.csv~ into ~all.csv~
+  - Ignores headers after the first file
+  - Optionally includes an additional column called /File/ which specifies which file the row came from
+  - User can optionally change the ~./*.csv~ and ~all.csv~ options in interactive mode
+    
+
+* Usage
+  
+#+BEGIN_SRC shell
+csv-concat
+csv-concat interactive
+#+END_SRC
