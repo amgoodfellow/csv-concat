@@ -1,5 +1,6 @@
 extern crate glob;
 use glob::glob;
+use std::ffi::OsStr;
 use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader, Result, Write};
 
@@ -14,17 +15,19 @@ fn main() -> Result<()> {
     for entry in glob("./*.csv").expect("Invalid pattern") {
         match entry {
             Ok(path) => {
-                let file_name = path.clone();
-                let file = File::open(path)?;
-                let mut line_number = 0;
-                for line in BufReader::new(file).lines() {
-                    if !header_inserted && line_number == 0 {
-                        writeln!(&dest_file, "File,{}", line?)?;
-                        header_inserted = true;
-                    } else if !header_inserted || line_number != 0 {
-                        writeln!(&dest_file, "{},{}", file_name.display(), line?)?;
+                if path.file_stem() != Some(OsStr::new("all")) {
+                    let file_name = path.clone();
+                    let file = File::open(path)?;
+                    let mut line_number = 0;
+                    for line in BufReader::new(file).lines() {
+                        if !header_inserted && line_number == 0 {
+                            writeln!(&dest_file, "File,{}", line?)?;
+                            header_inserted = true;
+                        } else if !header_inserted || line_number != 0 {
+                            writeln!(&dest_file, "{},{}", file_name.display(), line?)?;
+                        }
+                        line_number += 1;
                     }
-                    line_number += 1;
                 }
             }
             Err(e) => println!("{:?}", e),
