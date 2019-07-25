@@ -6,7 +6,8 @@ use std::io::{BufRead, BufReader, Result, Write};
 fn main() -> Result<()> {
     let dest_file = OpenOptions::new()
         .create(true)
-        .append(true)
+        .write(true)
+        .truncate(true)
         .open("all.csv")?;
 
     let mut header_inserted = false;
@@ -17,10 +18,10 @@ fn main() -> Result<()> {
                 let file = File::open(path)?;
                 let mut line_number = 0;
                 for line in BufReader::new(file).lines() {
-                    if header_inserted == false && line_number == 0 {
+                    if !header_inserted && line_number == 0 {
                         writeln!(&dest_file, "File,{}", line?)?;
                         header_inserted = true;
-                    } else {
+                    } else if !header_inserted || line_number != 0 {
                         writeln!(&dest_file, "{},{}", file_name.display(), line?)?;
                     }
                     line_number += 1;
