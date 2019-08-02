@@ -21,7 +21,11 @@ fn main() -> Result<()> {
                     let mut line_number = 0;
                     for line in BufReader::new(file).lines() {
                         if !header_inserted && line_number == 0 {
-                            writeln!(&dest_file, "File,{}", line?)?;
+                            let mut csv_line = line?.clone();
+                            if csv_line.starts_with('\u{FEFF}') {
+                                csv_line.remove(0);
+                            }
+                            writeln!(&dest_file, "File,{}", csv_line)?;
                             header_inserted = true;
                         } else if !header_inserted || line_number != 0 {
                             writeln!(&dest_file, "{},{}", file_name.display(), line?)?;
